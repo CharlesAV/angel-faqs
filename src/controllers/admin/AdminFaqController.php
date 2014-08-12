@@ -66,6 +66,7 @@ class AdminFaqController extends AdminCrudController {
 			'question' => 'required',
 			'answer' => 'required'
 		);
+		
 		$validator = Validator::make(Input::all(), $rules);
 		if ($validator->fails()) {
 			foreach($validator->messages()->all() as $error) {
@@ -77,5 +78,4 @@ class AdminFaqController extends AdminCrudController {
 
 		return $errors;
 	}
-
 }

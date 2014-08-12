@@ -32,4 +32,24 @@ class FaqController extends \Angel\Core\AngelController {
 		// Return
 		return View::make('faqs::faqs.show', $this->data);
 	}
+
+	public function show_language($language_uri = 'en', $slug)
+	{
+		// Language
+		$language = $this->languages->filter(function ($language) use ($language_uri) {
+			return ($language->uri == $language_uri);
+		})->first();
+		if (!$language) App::abort(404);
+
+		//  Item
+		$faq = $this->Faq::where('language_id', $language->id)
+			         ->where('slug', $slug)
+					 ->first();
+		if (!$faq) App::abort(404);
+		$this->data['active_language'] = $language;
+		$this->data['faq'] = $faq;
+
+		// Return
+		return View::make('faqs::faqs.show', $this->data);
+	}
 }

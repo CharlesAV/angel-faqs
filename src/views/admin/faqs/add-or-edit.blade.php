@@ -18,7 +18,7 @@
 							'url'=>admin_uri('faqs/delete/'.$faq->id),
 							'class'=>'deleteForm',
 							'data-confirm'=>'Delete this faq forever?  This action cannot be undone!')) }}
-			<input type="submit" class="btn btn-sm btn-danger" value="Delete Forever" />
+			<input type="submit" class="btn btn-sm btn-danger" value="Delete" />
 		{{ Form::close() }}
 	@endif
 

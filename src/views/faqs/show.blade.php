@@ -2,10 +2,6 @@
 
 @section('title', $faq->title)
 
-@section('meta')
-	{{ $faq->meta_html() }}
-@stop
-
 @section('content')
 	<div class="row">
 		<h1 class="faq-question">{{ $faq->question }}</h1>

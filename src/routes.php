@@ -6,11 +6,6 @@ Route::group(array('prefix' => 'faq'), function() {
 
 	Route::get('/', $controller . '@index');
 	Route::get('{slug}', $controller . '@show');
-	Route::get('archive/{year}/{month}', $controller . '@archive');
-	Route::post('comments',array(
-		'before' => 'csrf',
-		'uses' => 'AdminFaqCommentController@attempt_add'
-	));
 });
 
 Route::group(array('prefix' => admin_uri('faqs'), 'before' => 'admin'), function() {
@@ -31,6 +26,10 @@ Route::group(array('prefix' => admin_uri('faqs'), 'before' => 'admin'), function
 	Route::post('delete/{id}', array(
 		'before' => 'csrf',
 		'uses' => $controller . '@delete'
+	));
+	Route::post('copy', array(
+		'before' => 'csrf',
+		'uses' => $controller . '@copy'
 	));
 	Route::post('order', $controller . '@order');
 });
