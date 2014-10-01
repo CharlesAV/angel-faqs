@@ -87,7 +87,7 @@
 					@endforeach
 				@else 
 					<tr>
-						<td colspan="3" align="center">
+						<td colspan="3" align="center" style="padding:30px;">
 							No FAQs Found.
 						</td>
 					</tr>

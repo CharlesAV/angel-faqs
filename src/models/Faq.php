@@ -3,28 +3,37 @@
 use App, Config, Angel\Core\LinkableModel;
 
 class Faq extends LinkableModel {
-	///////////////////////////////////////////////
-	//               Relationships               //
-	///////////////////////////////////////////////
-	public function changes()
+	public $slugSeed = 'question';
+	
+	public static function columns()
 	{
-		$Change = App::make('Change');
+		$columns = array(
+			'question',
+			'slug',
+			'answer'
+		);
+		if (Config::get('core::languages')) $columns[] = 'language_id';
+		return $columns;
+	}
 
-		return $Change::where('fmodel', 'Faq')
-				   	       ->where('fid', $this->id)
-				   	       ->with('user')
-				   	       ->orderBy('created_at', 'DESC')
-				   	       ->get();
+	public function validate_rules()
+	{
+		return array(
+			'question' => 'required',
+			'answer' => 'required'
+		);
 	}
 	
-	// Handling relationships in controller CRUD methods
-	public function pre_delete()
+	///////////////////////////////////////////////
+	//                  Events                   //
+	///////////////////////////////////////////////
+	public static function boot()
 	{
-		parent::pre_delete();
-		$Change = App::make('Change');
-		$Change::where('fmodel', 'Faq')
-			        ->where('fid', $this->id)
-			        ->delete();
+		parent::boot();
+
+		static::saving(function($faq) {
+			$faq->answer_plaintext = strip_tags($faq->answer);
+		});
 	}
 
 	///////////////////////////////////////////////
@@ -42,5 +51,15 @@ class Faq extends LinkableModel {
 	public function link_edit()
 	{
 		return admin_url('faqs/edit/' . $this->id);
+	}
+	
+	public function search($terms)
+	{
+		return static::where(function($query) use ($terms) {
+			foreach ($terms as $term) {
+				$query->orWhere('question', 'like', $term);
+				$query->orWhere('answer_plaintext',  'like', $term);
+			}
+		})->get();
 	}
 }
