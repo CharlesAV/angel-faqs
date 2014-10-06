@@ -42,9 +42,10 @@ class FaqController extends \Angel\Core\AngelController {
 		if (!$language) App::abort(404);
 
 		//  Item
-		$faq = $this->Faq::where('language_id', $language->id)
-			         ->where('slug', $slug)
-					 ->first();
+		$faq = $this->Faq
+					->where('language_id', $language->id)
+			        ->where('slug', $slug)
+					->first();
 		if (!$faq) App::abort(404);
 		$this->data['active_language'] = $language;
 		$this->data['faq'] = $faq;
