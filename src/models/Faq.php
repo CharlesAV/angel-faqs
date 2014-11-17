@@ -1,39 +1,20 @@
 <?php namespace Angel\Faqs;
 
-use App, Config, Angel\Core\LinkableModel;
+use App, Config;
 
-class Faq extends LinkableModel {
-	public $slugSeed = 'question';
-	
-	public static function columns()
-	{
-		$columns = array(
-			'question',
-			'slug',
-			'answer'
-		);
-		if (Config::get('core::languages')) $columns[] = 'language_id';
-		return $columns;
-	}
-
-	public function validate_rules()
-	{
-		return array(
-			'question' => 'required',
-			'answer' => 'required'
-		);
-	}
-	
+class Faq extends \Eloquent {
 	///////////////////////////////////////////////
-	//                  Events                   //
+	//               Relationships               //
 	///////////////////////////////////////////////
-	public static function boot()
+	public function changes()
 	{
-		parent::boot();
+		$Change = App::make('Change');
 
-		static::saving(function($faq) {
-			$faq->answer_plaintext = strip_tags($faq->answer);
-		});
+		return $Change::where('fmodel', 'Testimonial')
+				   	       ->where('fid', $this->id)
+				   	       ->with('user')
+				   	       ->orderBy('created_at', 'DESC')
+				   	       ->get();
 	}
 
 	///////////////////////////////////////////////
